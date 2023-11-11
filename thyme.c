@@ -1,5 +1,30 @@
+/*
+MIT License
+
+Copyright (c) 2023 ignurof
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 #include <stdio.h>
 #include <time.h>
+#include "thyme.h"
 
 // DEBUG
 int year_date = 2023;
@@ -9,20 +34,6 @@ int hour_date = 9;
 int minute_date = 42;
 int second_date = 0;
 // DEBUG
-
-// We need the struct definition here so it can be used wherever the header is #included
-struct ct
-{
-	int year;
-	int month;
-	int day_in_month;
-	int hour;
-	int min;
-	int sec;
-	int week_day;
-	int day_in_year;
-};
-
 //  2023
 //  JANUARY = 31,
 //	FEBRUARY = 28,
@@ -85,20 +96,10 @@ struct ct get_converted_time(void)
 	return converted_time;
 }
 
-struct tsd {
-	int years_since_date;
-	int months_since_date;
-	int weeks_since_date;
-	int days_since_date;
-	int hours_since_date;
-	int minutes_since_date;
-	int seconds_since_date;
-};
-
 struct tsd get_time_since_date(void)
 {
 	struct ct converted_time = get_converted_time();
-	
+
 	struct tsd time_since_date;
 	time_since_date.years_since_date = 0;
 	time_since_date.months_since_date = 0;
@@ -292,7 +293,31 @@ struct tsd get_time_since_date(void)
 		time_since_date.hours_since_date -= 1;
 	}
 
-	 time_since_date.seconds_since_date = time_since_date.minutes_since_date * 60 + converted_time.sec;
+	time_since_date.seconds_since_date = time_since_date.minutes_since_date * 60 + converted_time.sec;
 
-	 return time_since_date;
+	printf("thyme:\n");
+
+	printf("year: %i, month: %i, day_in_month: %i, week_day: %i\n",
+			converted_time.year,
+			converted_time.month,
+			converted_time.day_in_month,
+			converted_time.week_day
+		  );
+	printf("day_in_year: %i, hour: %i, min: %i, sec: %i\n\n",
+			converted_time.day_in_year,
+			converted_time.hour,
+			converted_time.min,
+			converted_time.sec
+		  );
+	printf("%i years, %i months, %i days, %i hours, %i minutes, %i seconds\n", 
+			time_since_date.years_since_date, 
+			current_month_date_count, 
+			current_day_date_count, 
+			current_hour_date_count, 
+			current_minute_date_count, 
+			current_second_date_count
+		  );
+
+
+	return time_since_date;
 }
