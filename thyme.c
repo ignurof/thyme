@@ -26,15 +26,6 @@ SOFTWARE.
 #include <time.h>
 #include "thyme.h"
 
-// DEBUG
-int year_date = 2023;
-int month_date = 1;
-int day_date = 5;
-int hour_date = 9;
-int minute_date = 42;
-int second_date = 0;
-// DEBUG
-
 //  2023
 //  JANUARY = 31,
 //	FEBRUARY = 28,
@@ -98,7 +89,7 @@ struct ct get_converted_time(void)
 }
 
 // TODO: Rip out current day calculations into their own function
-struct tsd get_time_since_date(void)
+struct tsd get_time_since_date(struct dti date_time_input)
 {
 	struct ct converted_time = get_converted_time();
 
@@ -116,10 +107,10 @@ struct tsd get_time_since_date(void)
 	time_since_date.current_minute_date_count = 0;
 	time_since_date.current_second_date_count = 0;
 
-	time_since_date.years_since_date = converted_time.year - year_date;
+	time_since_date.years_since_date = converted_time.year - date_time_input.year_start;
 
 	// current_x_date_count details the current months of the year, or days of the month
-	time_since_date.current_month_date_count = converted_time.month - month_date;
+	time_since_date.current_month_date_count = converted_time.month - date_time_input.month_start;
 	// if age has not reached the birth month yet, convert year and month correctly
 	// ie: 28 years -2 months -> 27 years 10 months
 	if(time_since_date.current_month_date_count < 0)
@@ -130,8 +121,8 @@ struct tsd get_time_since_date(void)
 		time_since_date.years_since_date -= 1;
 	}
 
-	time_since_date.current_day_date_count = converted_time.day_in_month - day_date;
-	int iterate_year_date = year_date;
+	time_since_date.current_day_date_count = converted_time.day_in_month - date_time_input.day_start;
+	int iterate_year_date = date_time_input.year_start;
 	int i;
 	for(i = 0; i < time_since_date.years_since_date; i++)
 	{
@@ -167,7 +158,7 @@ struct tsd get_time_since_date(void)
 			case MARCH:
 				// FEBRUARY
 				time_since_date.current_day_date_count = 28 + time_since_date.current_day_date_count;
-				if(year_date % 4 == 0) // leap year
+				if(date_time_input.year_start % 4 == 0) // leap year
 					time_since_date.current_day_date_count += 1;
 				break;
 			case APRIL:
@@ -209,21 +200,21 @@ struct tsd get_time_since_date(void)
 		}
 	}
 
-	time_since_date.current_hour_date_count = converted_time.hour - hour_date;
+	time_since_date.current_hour_date_count = converted_time.hour - date_time_input.hour_start;
 	if(time_since_date.current_hour_date_count < 0)
 	{
 		time_since_date.current_hour_date_count = 24 + time_since_date.current_hour_date_count;
 		time_since_date.current_day_date_count -= 1;
 	}
 
-	time_since_date.current_minute_date_count = converted_time.min - minute_date;
+	time_since_date.current_minute_date_count = converted_time.min - date_time_input.minute_start;
 	if(time_since_date.current_minute_date_count < 0)
 	{
 		time_since_date.current_minute_date_count = 60 + time_since_date.current_minute_date_count;
 		time_since_date.current_hour_date_count -= 1;
 	}
 
-	time_since_date.current_second_date_count = converted_time.sec - second_date;
+	time_since_date.current_second_date_count = converted_time.sec - date_time_input.second_start;
 	if(time_since_date.current_second_date_count < 0)
 	{
 		time_since_date.current_second_date_count = 60 + time_since_date.current_second_date_count;
@@ -248,7 +239,7 @@ struct tsd get_time_since_date(void)
 					break;
 				case FEBRUARY:
 					time_since_date.days_since_date += 28;
-					if(year_date % 4 == 0) // leap year
+					if(date_time_input.year_start % 4 == 0) // leap year
 						time_since_date.days_since_date += 1;
 					break;
 				case MARCH:
@@ -290,11 +281,11 @@ struct tsd get_time_since_date(void)
 	time_since_date.weeks_since_date = time_since_date.days_since_date / 7;
 	time_since_date.hours_since_date = time_since_date.days_since_date * 24 - 24 + converted_time.hour;
 	// account for the hours on the day of the start date
-	time_since_date.hours_since_date += 24 - hour_date;
+	time_since_date.hours_since_date += 24 - date_time_input.hour_start;
 
 	time_since_date.minutes_since_date = time_since_date.hours_since_date * 60;
-	time_since_date.minutes_since_date += converted_time.min - minute_date;
-	if(converted_time.min - minute_date < 0)
+	time_since_date.minutes_since_date += converted_time.min - date_time_input.minute_start;
+	if(converted_time.min - date_time_input.minute_start < 0)
 	{
 		// if the hour is not reached yet make sure to account for that
 		time_since_date.hours_since_date -= 1;
@@ -302,12 +293,12 @@ struct tsd get_time_since_date(void)
 
 	time_since_date.seconds_since_date = time_since_date.minutes_since_date * 60 + converted_time.sec;
 
-	example_debug(converted_time);
-	example_print(time_since_date);
-	
 	return time_since_date;
 }
 
+// TODO: Flytta exempel till egen files
+// example_print.c har egen main som inkluderar thyme.h
+// där jag visar på ett ungefär hur man kan använda just den funktionen med nuvarande funktionalitet
 void example_debug(struct ct converted_time)
 {
 	printf("thyme:\n");

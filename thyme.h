@@ -24,6 +24,7 @@ SOFTWARE.
 
 
 // We need the struct definition here so it can be used wherever the header is #included
+//converted_time
 struct ct
 {
 	int year;
@@ -36,6 +37,7 @@ struct ct
 	int day_in_year;
 };
 
+//time_since_date
 struct tsd {
 	int years_since_date;
 	int months_since_date;
@@ -51,8 +53,19 @@ struct tsd {
 	int current_second_date_count;
 };
 
+//date_time_input
+struct dti {
+	int year_start;
+	int month_start;
+	int day_start;
+	int hour_start;
+	int minute_start;
+	int second_start;
+};
+
+
 struct ct get_converted_time(void);
-struct tsd get_time_since_date(void);
+struct tsd get_time_since_date(struct dti);
 
 void example_debug(struct ct);
 void example_print(struct tsd);
