@@ -66,6 +66,3 @@ struct dti {
 
 struct ct get_converted_time(void);
 struct tsd get_time_since_date(struct dti);
-
-void example_debug(struct ct);
-void example_print(struct tsd);

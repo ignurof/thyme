@@ -295,38 +295,3 @@ struct tsd get_time_since_date(struct dti date_time_input)
 
 	return time_since_date;
 }
-
-// TODO: Flytta exempel till egen files
-// example_print.c har egen main som inkluderar thyme.h
-// där jag visar på ett ungefär hur man kan använda just den funktionen med nuvarande funktionalitet
-void example_debug(struct ct converted_time)
-{
-	printf("thyme:\n");
-
-	printf("year: %i, month: %i, day_in_month: %i, week_day: %i\n",
-			converted_time.year,
-			converted_time.month,
-			converted_time.day_in_month,
-			converted_time.week_day
-		  );
-	printf("day_in_year: %i, hour: %i, min: %i, sec: %i\n\n",
-			converted_time.day_in_year,
-			converted_time.hour,
-			converted_time.min,
-			converted_time.sec
-		  );
-}
-
-void example_print(struct tsd time_since_date)
-{
-		printf("%i years, %i months, %i days, %i hours, %i minutes, %i seconds\n", 
-			time_since_date.years_since_date, 
-			time_since_date.current_month_date_count, 
-			time_since_date.current_day_date_count, 
-			time_since_date.current_hour_date_count, 
-			time_since_date.current_minute_date_count, 
-			time_since_date.current_second_date_count
-		  );
-}
-
-
