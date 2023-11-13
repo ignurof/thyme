@@ -44,7 +44,15 @@ struct tsd {
 	int hours_since_date;
 	int minutes_since_date;
 	int seconds_since_date;
+	int current_month_date_count;
+	int current_day_date_count;
+	int current_hour_date_count;
+	int current_minute_date_count;
+	int current_second_date_count;
 };
 
 struct ct get_converted_time(void);
 struct tsd get_time_since_date(void);
+
+void example_debug(struct ct);
+void example_print(struct tsd);

@@ -34,6 +34,7 @@ int hour_date = 9;
 int minute_date = 42;
 int second_date = 0;
 // DEBUG
+
 //  2023
 //  JANUARY = 31,
 //	FEBRUARY = 28,
@@ -96,6 +97,7 @@ struct ct get_converted_time(void)
 	return converted_time;
 }
 
+// TODO: Rip out current day calculations into their own function
 struct tsd get_time_since_date(void)
 {
 	struct ct converted_time = get_converted_time();
@@ -108,22 +110,27 @@ struct tsd get_time_since_date(void)
 	time_since_date.hours_since_date = 0;
 	time_since_date.minutes_since_date = 0;
 	time_since_date.seconds_since_date = 0;
+	time_since_date.current_month_date_count = 0;
+	time_since_date.current_day_date_count = 0;
+	time_since_date.current_hour_date_count = 0;
+	time_since_date.current_minute_date_count = 0;
+	time_since_date.current_second_date_count = 0;
 
 	time_since_date.years_since_date = converted_time.year - year_date;
 
 	// current_x_date_count details the current months of the year, or days of the month
-	int current_month_date_count = converted_time.month - month_date;
+	time_since_date.current_month_date_count = converted_time.month - month_date;
 	// if age has not reached the birth month yet, convert year and month correctly
 	// ie: 28 years -2 months -> 27 years 10 months
-	if(current_month_date_count < 0)
+	if(time_since_date.current_month_date_count < 0)
 	{
 		int x = 12;
-		x += current_month_date_count;
-		current_month_date_count = x;
+		x += time_since_date.current_month_date_count;
+		time_since_date.current_month_date_count = x;
 		time_since_date.years_since_date -= 1;
 	}
 
-	int current_day_date_count = converted_time.day_in_month - day_date;
+	time_since_date.current_day_date_count = converted_time.day_in_month - day_date;
 	int iterate_year_date = year_date;
 	int i;
 	for(i = 0; i < time_since_date.years_since_date; i++)
@@ -142,97 +149,97 @@ struct tsd get_time_since_date(void)
 
 	// avoid case where the day_date is not yet reached
 	// so we need to adjust the month and days
-	if(current_day_date_count < 0)
+	if(time_since_date.current_day_date_count < 0)
 	{
-		current_month_date_count -= 1;
+		time_since_date.current_month_date_count -= 1;
 		// here we need to make sure month index is back to 0
 		// then account for the previous month not current month
 		switch(converted_time.month - 1)
 		{
 			case JANUARY:
 				// DECEMBER 
-				current_day_date_count = 31 + current_day_date_count;
+				time_since_date.current_day_date_count = 31 + time_since_date.current_day_date_count;
 				break;
 			case FEBRUARY:
 				// JANUARY
-				current_day_date_count = 31 + current_day_date_count;
+				time_since_date.current_day_date_count = 31 + time_since_date.current_day_date_count;
 				break;
 			case MARCH:
 				// FEBRUARY
-				current_day_date_count = 28 + current_day_date_count;
+				time_since_date.current_day_date_count = 28 + time_since_date.current_day_date_count;
 				if(year_date % 4 == 0) // leap year
-					current_day_date_count += 1;
+					time_since_date.current_day_date_count += 1;
 				break;
 			case APRIL:
 				// MARCH
-				current_day_date_count = 31 + current_day_date_count;
+				time_since_date.current_day_date_count = 31 + time_since_date.current_day_date_count;
 				break;
 			case MAY:
 				// APRIL
-				current_day_date_count = 30 + current_day_date_count;
+				time_since_date.current_day_date_count = 30 + time_since_date.current_day_date_count;
 				break;
 			case JUNE:
 				// MAY
-				current_day_date_count = 31 + current_day_date_count;
+				time_since_date.current_day_date_count = 31 + time_since_date.current_day_date_count;
 				break;
 			case JULY:
 				// JUNE
-				current_day_date_count = 30 + current_day_date_count;
+				time_since_date.current_day_date_count = 30 + time_since_date.current_day_date_count;
 				break;
 			case AUGUST:
 				// JULY
-				current_day_date_count = 31 + current_day_date_count;
+				time_since_date.current_day_date_count = 31 + time_since_date.current_day_date_count;
 				break;
 			case SEPTEMBER:
 				// AUGUST
-				current_day_date_count = 31 + current_day_date_count;
+				time_since_date.current_day_date_count = 31 + time_since_date.current_day_date_count;
 				break;
 			case OCTOBER:
 				// SEPTEMBER
-				current_day_date_count = 30 + current_day_date_count;
+				time_since_date.current_day_date_count = 30 + time_since_date.current_day_date_count;
 				break;
 			case NOVEMBER:
 				// OCTOBER
-				current_day_date_count = 31 + current_day_date_count;
+				time_since_date.current_day_date_count = 31 + time_since_date.current_day_date_count;
 				break;
 			case DECEMBER:
 				// NOVEMBER
-				current_day_date_count = 30 + current_day_date_count;
+				time_since_date.current_day_date_count = 30 + time_since_date.current_day_date_count;
 				break;
 		}
 	}
 
-	int current_hour_date_count = converted_time.hour - hour_date;
-	if(current_hour_date_count < 0)
+	time_since_date.current_hour_date_count = converted_time.hour - hour_date;
+	if(time_since_date.current_hour_date_count < 0)
 	{
-		current_hour_date_count = 24 + current_hour_date_count;
-		current_day_date_count -= 1;
+		time_since_date.current_hour_date_count = 24 + time_since_date.current_hour_date_count;
+		time_since_date.current_day_date_count -= 1;
 	}
 
-	int current_minute_date_count = converted_time.min - minute_date;
-	if(current_minute_date_count < 0)
+	time_since_date.current_minute_date_count = converted_time.min - minute_date;
+	if(time_since_date.current_minute_date_count < 0)
 	{
-		current_minute_date_count = 60 + current_minute_date_count;
-		current_hour_date_count -= 1;
+		time_since_date.current_minute_date_count = 60 + time_since_date.current_minute_date_count;
+		time_since_date.current_hour_date_count -= 1;
 	}
 
-	int current_second_date_count = converted_time.sec - second_date;
-	if(current_second_date_count < 0)
+	time_since_date.current_second_date_count = converted_time.sec - second_date;
+	if(time_since_date.current_second_date_count < 0)
 	{
-		current_second_date_count = 60 + current_second_date_count;
-		current_minute_date_count -= 1;
+		time_since_date.current_second_date_count = 60 + time_since_date.current_second_date_count;
+		time_since_date.current_minute_date_count -= 1;
 	}
 
-	time_since_date.months_since_date = time_since_date.years_since_date * 12 + current_month_date_count;
+	time_since_date.months_since_date = time_since_date.years_since_date * 12 + time_since_date.current_month_date_count;
 
-	time_since_date.days_since_date = current_day_date_count + time_since_date.days_since_date;
+	time_since_date.days_since_date = time_since_date.current_day_date_count + time_since_date.days_since_date;
 
 	// calculcate correct days since date
 	if(time_since_date.years_since_date == 0)
 	{
 		time_since_date.days_since_date = 0;
 		int j;
-		for(j = 0; j < current_month_date_count; j++)
+		for(j = 0; j < time_since_date.current_month_date_count; j++)
 		{
 			switch(j)
 			{
@@ -277,7 +284,7 @@ struct tsd get_time_since_date(void)
 			}
 		}
 
-		time_since_date.days_since_date += current_day_date_count;
+		time_since_date.days_since_date += time_since_date.current_day_date_count;
 	}
 
 	time_since_date.weeks_since_date = time_since_date.days_since_date / 7;
@@ -295,6 +302,14 @@ struct tsd get_time_since_date(void)
 
 	time_since_date.seconds_since_date = time_since_date.minutes_since_date * 60 + converted_time.sec;
 
+	example_debug(converted_time);
+	example_print(time_since_date);
+	
+	return time_since_date;
+}
+
+void example_debug(struct ct converted_time)
+{
 	printf("thyme:\n");
 
 	printf("year: %i, month: %i, day_in_month: %i, week_day: %i\n",
@@ -309,15 +324,18 @@ struct tsd get_time_since_date(void)
 			converted_time.min,
 			converted_time.sec
 		  );
-	printf("%i years, %i months, %i days, %i hours, %i minutes, %i seconds\n", 
-			time_since_date.years_since_date, 
-			current_month_date_count, 
-			current_day_date_count, 
-			current_hour_date_count, 
-			current_minute_date_count, 
-			current_second_date_count
-		  );
-
-
-	return time_since_date;
 }
+
+void example_print(struct tsd time_since_date)
+{
+		printf("%i years, %i months, %i days, %i hours, %i minutes, %i seconds\n", 
+			time_since_date.years_since_date, 
+			time_since_date.current_month_date_count, 
+			time_since_date.current_day_date_count, 
+			time_since_date.current_hour_date_count, 
+			time_since_date.current_minute_date_count, 
+			time_since_date.current_second_date_count
+		  );
+}
+
+
