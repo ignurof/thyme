@@ -55,13 +55,13 @@ enum {
 	DECEMBER = 11
 };
 
-struct ct get_converted_time(void)
+struct converted_time_t get_converted_time(void)
 {
 	// How to use time:
 	// man mktime, man difftime
 	time_t time_result = time(NULL);
 
-	struct ct converted_time;
+	struct converted_time_t converted_time;
 	converted_time.year = -1;
 	converted_time.month = -1;
 	converted_time.day_in_month = -1;
@@ -89,11 +89,11 @@ struct ct get_converted_time(void)
 }
 
 // TODO: Rip out current day calculations into their own function
-struct tsd get_time_since_date(struct dti date_time_input)
+struct time_since_date_t get_time_since_date(struct date_time_input_t date_time_input)
 {
-	struct ct converted_time = get_converted_time();
+	struct converted_time_t converted_time = get_converted_time();
 
-	struct tsd time_since_date;
+	struct time_since_date_t time_since_date;
 	time_since_date.years_since_date = 0;
 	time_since_date.months_since_date = 0;
 	time_since_date.weeks_since_date = 0;
