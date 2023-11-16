@@ -27,17 +27,17 @@ SOFTWARE.
 
 int main(void)
 {
-	struct dti date_time_input;
-	date_time_input.year_start = 1990;
-	date_time_input.month_start = 1;
-	date_time_input.day_start = 3;
-	date_time_input.hour_start = 23;
-	date_time_input.minute_start = 59;
-	date_time_input.second_start = 0;
+	struct date_time_input_t dti;
+	dti.year_start = 1990;
+	dti.month_start = 1;
+	dti.day_start = 3;
+	dti.hour_start = 23;
+	dti.minute_start = 59;
+	dti.second_start = 0;
 
-	struct tsd date_time_output = get_time_since_date(date_time_input);
+	struct time_since_date_t tsd = get_time_since_date(dti);
 
-	printf("%i years since date.\n", date_time_output.years_since_date);
+	printf("%i years since date.\n", tsd.years_since_date);
 
 	return 0;
 }
